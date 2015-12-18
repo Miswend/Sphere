@@ -39,7 +39,7 @@ public class player_movement : MonoBehaviour
 
         if (direction != Vector3.zero)
         {
-            transform.rotation = Quaternion.LookRotation(direction);
+            transform.rotation = Quaternion.LookRotation(direction, Vector3.up);
         }
         transform.position += direction * movementSpeed * Time.deltaTime;
     }
