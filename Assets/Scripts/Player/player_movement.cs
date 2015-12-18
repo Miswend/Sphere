@@ -7,31 +7,40 @@ public class player_movement : MonoBehaviour
     //Variables
     public float movementSpeed;
 
+    private Vector3 direction;
+
 
     // Use this for initialization
     void Start()
     {
-
+        direction = Vector3.zero;
     }
 
     // Update is called once per frame
     void Update()
     {
+        direction = Vector3.zero;
         if (Input.GetKey("left"))
         {
-            transform.position += Vector3.left * movementSpeed * Time.deltaTime;
+            direction += Vector3.left;
         }
         if (Input.GetKey("right"))
         {
-            transform.position += Vector3.right * movementSpeed * Time.deltaTime;
+            direction += Vector3.right;
         }
         if (Input.GetKey("up"))
         {
-            transform.position += Vector3.forward * movementSpeed * Time.deltaTime;
+            direction += Vector3.forward;
         }
         if (Input.GetKey("down"))
         {
-            transform.position += Vector3.back * movementSpeed * Time.deltaTime;
+            direction += Vector3.back;
         }
+
+        if (direction != Vector3.zero)
+        {
+            transform.rotation = Quaternion.LookRotation(direction);
+        }
+        transform.position += direction * movementSpeed * Time.deltaTime;
     }
 }
