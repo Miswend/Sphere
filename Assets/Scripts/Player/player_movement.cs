@@ -4,20 +4,21 @@ using System.Collections;
 public class player_movement : MonoBehaviour
 {
 
-    //Variables
+    // Variables
     public float movementSpeed;
 
     private Vector3 direction;
-
+    private Rigidbody playerRigidbody;
 
     // Use this for initialization
     void Start()
     {
         direction = Vector3.zero;
+        playerRigidbody = GetComponent<Rigidbody>();
     }
 
-    // Update is called once per frame
-    void Update()
+    // Update is called once per physics calculation
+    void FixedUpdate()
     {
         direction = Vector3.zero;
         if (Input.GetKey("left"))
@@ -39,8 +40,8 @@ public class player_movement : MonoBehaviour
 
         if (direction != Vector3.zero)
         {
-            transform.rotation = Quaternion.LookRotation(direction, Vector3.up);
+            playerRigidbody.rotation = Quaternion.LookRotation(direction, Vector3.up);
         }
-        transform.position += direction * movementSpeed * Time.deltaTime;
+        playerRigidbody.position += direction.normalized * movementSpeed * Time.deltaTime;
     }
 }
