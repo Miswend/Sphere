@@ -5,7 +5,7 @@ public class player_movement : MonoBehaviour
 {
 
     // Variables
-    public float movementSpeed;
+    public float speed;
     public Rigidbody bullet;
     public float bulletSpeed;
 
@@ -48,7 +48,7 @@ public class player_movement : MonoBehaviour
             playerRigidbody.rotation = Quaternion.LookRotation(direction, Vector3.up);
             lastDirection = direction;
         }
-        playerRigidbody.position += direction.normalized * movementSpeed * Time.deltaTime;
+        playerRigidbody.position += direction.normalized * speed * Time.deltaTime;
 
 
         // Fire bullet
