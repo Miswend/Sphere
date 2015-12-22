@@ -10,6 +10,7 @@ public class enemy_movement : MonoBehaviour {
     public float bulletSpeed;
     public Rigidbody bullet;
     public Collider player;
+    public Transform barrelTransform;
 
     private Vector3 origin;
     private Vector3 lastCorner;
@@ -18,29 +19,37 @@ public class enemy_movement : MonoBehaviour {
     private Ray myRay;
     private RaycastHit myRaycastHit;
     private float firerateCounter;
+    private Vector3 gravityVector;
 
 	// Use this for initialization
 	void Start () {
         enemyRigidbody = GetComponent<Rigidbody>();
         origin = enemyRigidbody.position;
         lastCorner = origin;
-        direction = Vector3.forward;
+        direction = Vector3.left;
         myRay.direction = direction;
         myRay.origin = enemyRigidbody.position;
         firerateCounter = 0f;
+        gravityVector = (barrelTransform.position - enemyRigidbody.position);
+        gravityVector.z = 0;
+        gravityVector = gravityVector.normalized;
     }
 	
 	void FixedUpdate () {
-        enemyRigidbody.position += direction * speed * Time.deltaTime;
+        gravityVector = (barrelTransform.position - enemyRigidbody.position);
+        gravityVector.z = 0;
+        gravityVector = gravityVector.normalized;
+
+        enemyRigidbody.position += Vector3.Cross(gravityVector, direction) * speed * Time.deltaTime;
 
 	    if ((enemyRigidbody.position - lastCorner).magnitude >= roamRadius)
         {
             direction = Vector3.Cross(direction, Vector3.up);
-            enemyRigidbody.rotation = Quaternion.LookRotation(direction, Vector3.up);
+            enemyRigidbody.rotation = Quaternion.LookRotation(direction, gravityVector);
             lastCorner = enemyRigidbody.position;
         }
 
-        myRay.direction = direction;
+        myRay.direction = Vector3.Cross(gravityVector, direction);
         myRay.origin = enemyRigidbody.position;
         if (player.Raycast(myRay, out myRaycastHit, range) && (firerateCounter >= firerate))
         {
