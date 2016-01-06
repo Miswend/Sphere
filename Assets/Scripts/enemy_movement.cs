@@ -40,14 +40,15 @@ public class enemy_movement : MonoBehaviour {
         gravityVector.z = 0;
         gravityVector = gravityVector.normalized;
 
-        enemyRigidbody.position += Vector3.Cross(gravityVector, direction) * speed * Time.deltaTime;
+        enemyRigidbody.AddForce(Vector3.Cross(gravityVector, direction) * speed * enemyRigidbody.mass * Time.deltaTime);
+        enemyRigidbody.rotation = Quaternion.LookRotation(direction, -gravityVector);
 
-	    if ((enemyRigidbody.position - lastCorner).magnitude >= roamRadius)
+        /* if ((enemyRigidbody.position - lastCorner).magnitude >= roamRadius)
         {
             direction = Vector3.Cross(direction, Vector3.up);
             enemyRigidbody.rotation = Quaternion.LookRotation(direction, gravityVector);
             lastCorner = enemyRigidbody.position;
-        }
+        } */
 
         myRay.direction = Vector3.Cross(gravityVector, direction);
         myRay.origin = enemyRigidbody.position;

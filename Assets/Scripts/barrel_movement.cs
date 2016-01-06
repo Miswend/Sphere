@@ -14,6 +14,6 @@ public class barrel_movement : MonoBehaviour {
 	
 
 	void FixedUpdate () {
-        barrelTransform.rotation *= Quaternion.AngleAxis(rotationSpeed * Time.deltaTime, Vector3.up);
+        barrelTransform.rotation *= Quaternion.AngleAxis(rotationSpeed * Time.deltaTime, Vector3.forward);
 	}
 }
