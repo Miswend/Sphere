@@ -21,6 +21,6 @@ public class barrel_gravity : MonoBehaviour {
         gravityVector = (barrelTransform.position - objectRigidbody.position);
         gravityVector.z = 0;
         gravityVector = gravityVector.normalized;
-        objectRigidbody.AddForceAtPosition(gravityVector.normalized * barrelGravity * objectRigidbody.mass, objectRigidbody.position);
+        objectRigidbody.AddForceAtPosition(gravityVector * barrelGravity * objectRigidbody.mass, objectRigidbody.position);
 	}
 }
