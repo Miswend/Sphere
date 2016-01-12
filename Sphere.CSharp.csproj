@@ -71,6 +71,8 @@
     <Compile Include="Assets\Scripts\Player\camera_follow_player.cs" />
     <Compile Include="Assets\Scripts\Player\player_actions.cs" />
     <Compile Include="Assets\Scripts\Player\player_collectables.cs" />
+    <Compile Include="Assets\Scripts\on_track_behaviour.cs" />
+    <Compile Include="Assets\Scripts\track_functions.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />
 </Project>

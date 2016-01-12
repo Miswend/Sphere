@@ -16,6 +16,8 @@ public class player_actions : MonoBehaviour
     private Vector3 lastDirection;
     private Rigidbody playerRigidbody;
     private Transform currentTrackTransform;
+    private MeshRenderer currentTrackMeshRenderer;
+    private GameObject[] objectsOnTrack;
 
     private bool isSwitching;
     private int currentTrackNumber;
@@ -33,6 +35,8 @@ public class player_actions : MonoBehaviour
         lastDirection = direction;
         playerRigidbody = GetComponent<Rigidbody>();
         currentTrackTransform = GameObject.Find("Track (" + currentTrackNumber.ToString() + ")").GetComponent<Transform>();
+        currentTrackMeshRenderer = GameObject.Find("Track (" + currentTrackNumber.ToString() + ")").GetComponent<MeshRenderer>();
+
     }
 
 
@@ -64,20 +68,22 @@ public class player_actions : MonoBehaviour
         && (currentTrackNumber < maxTrackNumber))
         {
             currentTrackNumber++;
-            currentTrackTransform = GameObject.Find("Track (" + currentTrackNumber.ToString() + ")").GetComponent<Transform>();
-            switchDirection = new Vector3(0f, 0f, (currentTrackTransform.position.z - playerRigidbody.position.z)).normalized;
-            playerRigidbody.AddForce(trackSwitchJumpForce);
-            isSwitching = true;
+            updateSwitchTrack();
+            if (Input.GetKey("left shift"))
+            {
+                switchObjectsOnTrack(currentTrackNumber - 1);
+            }
         }
         if (Input.GetKeyDown("down") 
         && !isSwitching
         && (currentTrackNumber > 0))
         {
             currentTrackNumber--;
-            currentTrackTransform = GameObject.Find("Track (" + currentTrackNumber.ToString() + ")").GetComponent<Transform>();
-            switchDirection = new Vector3(0f, 0f, (currentTrackTransform.position.z - playerRigidbody.position.z)).normalized;
-            playerRigidbody.AddForce(trackSwitchJumpForce);
-            isSwitching = true;
+            updateSwitchTrack();
+            if (Input.GetKey("left shift"))
+            {
+                switchObjectsOnTrack(currentTrackNumber + 1);
+            }
         }
         if (isSwitching)
         {
@@ -89,6 +95,18 @@ public class player_actions : MonoBehaviour
         }
 
 
+        //changing track colour
+        if (Input.GetKey("left shift"))
+        {
+            //currentTrackMeshRenderer = GameObject.Find("Track (" + currentTrackNumber.ToString() + ")").GetComponent<MeshRenderer>();
+            //currentTrackMeshRenderer.material = new Material(Shader.Find("Light Blue"));
+        } else
+        {
+            //currentTrackMeshRenderer.material = new Material(Shader.Find("Yellow"));
+        }
+
+
+
         // Fire bullet
         if (Input.GetKeyDown("space"))
         {
@@ -96,19 +114,37 @@ public class player_actions : MonoBehaviour
             myBullet.velocity = lastDirection * bulletSpeed;
         }
 
+
+
     }
 
 
 
+    private void updateSwitchTrack()
+    {
+        currentTrackTransform = GameObject.Find("Track (" + currentTrackNumber.ToString() + ")").GetComponent<Transform>();
+        switchDirection = new Vector3(0f, 0f, (currentTrackTransform.position.z - playerRigidbody.position.z)).normalized;
+        playerRigidbody.AddForce(trackSwitchJumpForce * playerRigidbody.mass);
+        isSwitching = true;
+    }
 
     private void jumpToTrack()
     {
         playerRigidbody.position +=  switchDirection * switchSpeed * Time.deltaTime;
 
-        if (Mathf.Abs((playerRigidbody.position - currentTrackTransform.position).z) <= 0.1f)
+        if (switchDirection != new Vector3(0f, 0f, (currentTrackTransform.position.z - playerRigidbody.position.z)).normalized)
         {
             playerRigidbody.position += new Vector3(0f, 0f, (currentTrackTransform.position.z - playerRigidbody.position.z));
             isSwitching = false;
+        }
+    }
+
+    private void switchObjectsOnTrack(int oldTrack)
+    {
+        objectsOnTrack = GameObject.FindGameObjectsWithTag(oldTrack.ToString());
+        foreach (GameObject gameObj in objectsOnTrack)
+        {
+            gameObj.tag = currentTrackNumber.ToString();
         }
     }
 }
